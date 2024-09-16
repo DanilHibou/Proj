@@ -559,7 +559,7 @@ namespace AD.Controllers
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://admin.googleapis.com/admin/directory/v1/groups/{GoogleGroup.Groupid}/members");
                     var memberInfo = new 
                     {
-                        email = userAccountNames.UserName + "@" + "koriphey.ru",
+                        email = userAccountNames.UserName + "@" + "",
                         role = "MEMBER"
                     };
                     string jsonContent = JsonConvert.SerializeObject(memberInfo);
