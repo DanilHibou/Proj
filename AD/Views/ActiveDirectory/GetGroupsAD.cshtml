@@ -1,0 +1,34 @@
+﻿@model AD.Controllers.ActiveDirectoryController.ActiveDirectoryModel;
+@{
+    ViewData["Title"] = "GetGroupsAD";
+}
+
+<div>
+    <h4>Список Групп</h4>
+    <hr />
+    <form method="post" action="@Url.Action("GetGroupsAD", "ActiveDirectory")">
+        <button type="submit">Загрузить группы</button>
+    </form>
+    <form method="post" action="@Url.Action("SaveGroupsAD", "ActiveDirectory")">
+        <button type="submit">сохранить</button>
+        <table class="table">
+            <tr>
+                <th>Выбрать</th>
+                <th>Имя Группы</th>
+                <th>Путь Группы</th>
+            </tr>
+            @for (int i = 0; i < Model.aDGroupsList.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => m.aDGroupsList[i].isChecked)
+                        @Html.HiddenFor(m => m.aDGroupsList[i].GroupName)
+                        @Html.HiddenFor(m => m.aDGroupsList[i].GroupPath)
+                    </td>
+                    <td>@Html.DisplayFor(m => m.aDGroupsList[i].GroupName)</td>
+                    <td>@Html.DisplayFor(m => m.aDGroupsList[i].GroupPath)</td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>

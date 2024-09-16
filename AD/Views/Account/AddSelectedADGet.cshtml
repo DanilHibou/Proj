@@ -1,0 +1,37 @@
+﻿@model AD.Controllers.AccountController.AccountModel
+
+@{
+    ViewData["Title"] = "AddSelectedADGet";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <form method="post" action="@Url.Action("AddSelectedAD", "Account")">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <ul>
+            @foreach (var userAccountName in Model.UserAccountNames)
+            {
+                <li>@userAccountName.UserName</li>
+                <input type="hidden" name="Selecteditem" value="@userAccountName.id" />
+            }
+        </ul>
+        
+        <p>Данное действие добавит пользователя в Google</p>
+        <div class="form-group">
+            <input type="submit" value="Добавить" class="btn btn-primary" />
+            @* <input type="cancel" value="Закрыть" class="btn btn-primary"/> *@
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+
+       
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

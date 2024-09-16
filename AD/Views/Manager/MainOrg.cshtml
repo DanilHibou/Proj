@@ -1,0 +1,74 @@
+﻿@model AD.Controllers.ManagerController.ManagerModel
+
+@{
+    ViewData["Title"] = "MainOrg";
+}
+
+<div class="row">
+
+    <form method="post" action="@Url.Action("MainOrg", "Manager")">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="organizationalDivision.Name">Имя подразделения</label>
+            <input asp-for="organizationalDivision.Name" class="form-control" />
+            <span asp-validation-for="organizationalDivision.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="organizationalDivision.Description">Описание</label>
+            <input asp-for="organizationalDivision.Description" class="form-control" />
+            <span asp-validation-for="organizationalDivision.Description" class="text-danger"></span>
+        </div>
+        
+       <div class="form-group">
+            <label asp-for="organizationalDivision.id" class="control-label">Главное подразделение</label>
+            <select asp-for="organizationalDivision.id" class="form-control">
+                <option value="">Выберите главное подразделение</option>
+                @foreach (var ou in Model.organizationalDivisions)
+                {
+                    <option value="@ou.id">@ou.Name</option>
+                }
+            </select>
+            <span asp-validation-for="organizationalDivision.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="aDOU.id" class="control-label">Путь OU AD</label>
+            <select asp-for="aDOU.id" class="form-control">
+                <option value="">Выберите OU</option>
+                @foreach (var domain in Model.aDOUs)
+                {
+                    <option value="@domain.id">@domain.OUName</option>
+                }
+            </select>
+            <span asp-validation-for="aDOU.OUName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="googleOU.id" class="control-label">Путь OU Google</label>
+            <select asp-for="googleOU.id" class="form-control">
+                <option value="">Выберите OU</option>
+                @foreach (var domain in Model.googleOUs)
+                {
+                    <option value="@domain.id">@domain.OUName</option>
+                }
+            </select>
+            <span asp-validation-for="googleOU.OUName" class="text-danger"></span>
+        </div>
+        @* <input type="hidden" asp-for="UserAccountNames2.id" /> *@
+        <p>Данное действие добавит подразделение в систему</p>
+        <div class="form-group">
+            <input type="submit" value="Добавить" class="btn btn-primary" />
+            @* <input type="cancel" value="Закрыть" class="btn btn-primary"/> *@
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+
+       
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

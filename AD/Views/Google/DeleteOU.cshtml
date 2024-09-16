@@ -1,0 +1,27 @@
+﻿@model AD.Models.GoogleOU
+
+@{
+    ViewData["Title"] = "DeleteOU";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Удалить</h1>
+
+<div>
+    <h4>AD удалить</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OUName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OUName)
+        </dd>       
+    </dl>
+
+    <form asp-action="DeleteOU">
+        <input type="hidden" asp-for="id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

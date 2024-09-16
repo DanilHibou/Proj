@@ -1,0 +1,25 @@
+﻿@model List<AD.Models.ADOU>;
+@{
+    ViewData["Title"] = "GetOUAD";
+}
+
+<div>
+    <h4>ADEntity List</h4>
+    <hr />
+    <form method="post" action="@Url.Action("GetOUAD", "Data")">
+        <button type="submit">Load all OUs</button>
+    </form>
+    <table class="table">
+        <tr>
+            <th>OU Name</th>
+            <th>OU Path</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => item.OUName)</td>
+                <td>@Html.DisplayFor(model => item.OUPath)</td>
+            </tr>
+        }
+    </table>
+</div>

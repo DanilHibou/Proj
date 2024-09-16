@@ -1,0 +1,673 @@
+﻿@model AD.Controllers.AccountController.AccountModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Управление учетными записями</h1>
+
+<style>
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-pass {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .name-link {
+        background-color: lightgrey;
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+        .name-link:hover {
+            background-color: #f0f0f0;
+            border-color: #888;
+            text-decoration: none;
+        }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+
+    .justify-content-center {
+        justify-content: center;
+    }
+
+    .me-2 {
+        margin-right: 0.5rem;
+    }
+
+    .me-3 {
+        margin-right: 1rem;
+    }
+
+    .subdivision-list {
+        padding-top: 10px;
+        padding-left: 20px;
+        overflow-wrap: break-word;
+    }
+
+    .margin-right {
+        margin-right: 10px;
+    }
+
+    .division-list {
+        padding-left: 0;
+    }
+
+        .division-list ul {
+            padding-left: 40px;
+        }
+
+        .division-list li {
+            list-style-type: none;
+            padding: 5px 0;
+        }
+
+    .division-item {
+        width: 80%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 2px;
+        cursor: pointer;
+    }
+
+        .division-item:hover {
+            background-color: #f0f0f0;
+        }
+
+    .btn {
+        margin-left: 10px;
+    }
+
+    .child-list {
+        margin-left: 10px;
+    }
+
+    .action-link {
+        margin-left: 5px;
+    }
+
+    .users-container {
+        padding-left: 30px;
+    }
+
+    .checkbox {
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        height: 100%; 
+    }
+
+    .table {
+        border: 1px solid #ccc; 
+    }
+
+        .table th {
+            background-color: #f0f0f0; 
+            text-align: center; 
+        }
+
+       
+        .table td {
+            text-align: center; 
+            vertical-align: middle;
+        }
+
+    .rounded{
+    }
+</style>
+
+
+<div class="modal fade use-script" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Данные пользователя</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+                @* @Html.Partial("_PartialView", Model.UserAccountNames2) *@
+            </div>            
+        </div>
+    </div>
+</div>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["UserCreated"] != null)
+{
+    <div class="modal fade" id="PasswordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <p><strong>@TempData["UserCreated"]</strong></p>
+                    </div>
+                    @if (TempData["Password"] != null)
+                    {
+                        <p>
+                            Пароль: <span id="passwordText">@TempData["Password"]</span>
+                            <button type="button" class="btn btn-primary btn-sm" id="copyPasswordBtn">Копировать</button>
+                        </p>
+                    }                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="col-md-3">
+    <form asp-controller="Account" asp-action="Index" method="post" class="ms-2">
+        <div class="input-group">
+            <input type="text" class="form-control" name="SearchString" placeholder="Поиск по фамилии">
+            <button class="btn btn-primary" type="submit">Поиск</button>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3 ">
+            <h4>Подразделения</h4>
+            <div class="col-md-12">
+                <ul class="division-list">
+                    @foreach (var division in Model.organizationalDivisions.Where(d => d.ParentId == null))
+                    {
+                        @Html.Raw(RenderDivision(division, Model.organizationalDivisions))
+                    }
+                </ul>
+                
+                @functions {
+                    string RenderDivision(OrganizationalDivisions division, IEnumerable<OrganizationalDivisions> allDivisions)
+                    {
+                        var result = new System.Text.StringBuilder();
+                        var editUrl = Url.Action("Index", "Account");
+
+                        result.Append($"<li>");
+                        result.Append($"<div class='division-item'>");
+
+                        var children = allDivisions.Where(d => d.ParentId == division.id).ToList();
+                        if (children.Any())
+                        {
+                            result.Append($"<span class='toggle-icon'>+</span> ");
+                        }
+
+                        result.Append($"<strong>{division.Name}</strong> {division.Description}");
+
+                        if (division.ADOUid != null && division.GoogleOUid != null)
+                        {
+                            result.Append($"<form action='{editUrl}' method='post' style='display:inline;'>");
+                            result.Append($"<input type='hidden' name='Id' value='{division.id}' />");
+                            result.Append($"<button type='submit' class='btn btn-primary btn-sm'>Загрузить</button>");
+                            result.Append($"</form>");
+                        }
+
+                        result.Append($"</div>");
+
+                        if (children.Any())
+                        {
+                            result.Append("<ul class='child-list' style='display:none;'>");
+                            foreach (var child in children)
+                            {
+                                result.Append(RenderDivision(child, allDivisions));
+                            }
+                            result.Append("</ul>");
+                        }
+
+                        result.Append("</li>");
+                        return result.ToString();
+                    }
+                }
+            </div>
+            <div class="division-item">
+                <a href="@Url.Action("Index", "Account")" @* class="division-item division-link" *@>
+                    <strong>Неназначенные</strong>
+                </a>
+            </div>
+        </div>
+        <div id="" class="users-container col-md-9">
+            
+            <div class="row mb-4">
+                <div class="col-md-12 d-flex align-items-center">
+                    <div class="col-md-6">
+                        <h4>Пользователи</h4>
+                    </div>
+                    <div class="col-md-6 text-end d-flex justify-content-end align-items-center">
+                        <div class="dropdown me-2" role="group" aria-label="Basic example">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Массовые действия
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><button id="button" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#AddSelected" data-url="@Url.Action("AddSelectedAD", "Account")">Отправить данные</button></li>
+                               
+                            </ul>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-url="@Url.Action("Create")">
+                            Создать новый аккаунт
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div>               
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Выбрать</th>
+                            <th>Имя</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.UserAccountNames.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        @Html.CheckBoxFor(m => m.UserAccountNames[i].isChecked, new { id = Model.UserAccountNames[i].id, @class = "toggle"/* , data_url = Url.Action("AddSelected", "Account")  */})
+                                        @Html.HiddenFor(m => m.UserAccountNames[i].id)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <a href="#" class="name-link me-3" data-bs-toggle="modal"
+                                           data-bs-target="#Info" data-url="@Url.Action("UserInfo",
+                                                new { id = Model.UserAccountNames[i].id })">
+                                            @Html.DisplayFor(m => m.UserAccountNames[i].LastName)
+                                            @Html.DisplayFor(m => m.UserAccountNames[i].FirstName)
+                                            @Html.DisplayFor(m => m.UserAccountNames[i].SurName)
+                                        </a>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="dropdown margin-right">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Создать
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                @if (Model.UserAccountNames[i].isADCreated.GetValueOrDefault())
+                                                {
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" disabled>AD</button>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#AddUser" data-url="@Url.Action("AddUser", new { id = Model.UserAccountNames[i].id })">AD</a>
+                                                    </li>
+                                                }
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#GoogleAddUser" data-url="@Url.Action("GoogleAddUser", new { id = Model.UserAccountNames[i].id })">Google</a></li>
+                                                <li><a class="dropdown-item" href="#">Y360</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown margin-right">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Добавить в группу
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#AddUserADGroup" data-url="@Url.Action("AddUserGroupAD", new { id = Model.UserAccountNames[i].id })">AD</a></li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#AddUserGroupGoogle" data-url="@Url.Action("AddUserGroupGoogle", new { id = Model.UserAccountNames[i].id })">Google</a></li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#AddUserADGroup" data-url="@Url.Action("AddUserGroupAD", new { id = Model.UserAccountNames[i].id })">Y360</a></li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Еще
+                                            </button>
+                                            <ul class="dropdown-menu">
+
+                                                @if (Model.UserAccountNames[i].isADCreated.GetValueOrDefault())
+                                                {
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ResetPasswordAD" data-url="@Url.Action("ResetPasswordAD", new { id = Model.UserAccountNames[i].id })">Сбросить пароль AD</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#SuspendAD" data-url="@Url.Action("SuspendAD", new { id = Model.UserAccountNames[i].id })">Забл/Разб AD</a>
+                                                    </li>
+                                                   
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" disabled>Сбросить пароль AD</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" disabled>Забл/Разб AD</button>
+                                                    </li>
+                                                }
+                                                @if (Model.UserAccountNames[i].isGoogleCreated.GetValueOrDefault())
+                                                {
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ResetPasswordGoogle" data-url="@Url.Action("ResetPasswordGoogle", new { id = Model.UserAccountNames[i].id })">Сбросить пароль Google</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#SuspendGoogle" data-url="@Url.Action("SuspendGoogle", new { id = Model.UserAccountNames[i].id })">Забл/Разб Google</a>
+                                                    </li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" disabled>Сбросить пароль Google</button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item" disabled>Забл/Разб Google</button>
+                                                    </li>
+
+                                                }
+                                                <li>
+                                                    <button type="button" class="dropdown-item" disabled>Забл/Разб Y360</button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="AddSelected" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить пользователя</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="AddUserGroupGoogle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить пользователя в группу Google</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="AddUserADGroup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить пользователя в группу AD</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+           
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="AddUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить пользователя</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+
+                @* @Html.Partial("AddUserView", Model.UserAccountNames2) *@
+            </div>
+            @* <div class="modal-footer">
+            @* <button type="submit" class="btn btn-primary">Добавить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            @* <button type="button" class="btn btn-primary">Добавить</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="GoogleAddUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить пользователя в Google</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+                @* @Html.Partial("AddGoogle", Model.UserAccountNames2)
+                @Html.Partial("AddGoogle", Model.googleOUs) *@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="Info" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Информация о пользователе</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+                @* @Html.Partial("AddGoogle", Model.UserAccountNames2)
+                @Html.Partial("AddGoogle", Model.googleOUs) *@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="ResetPasswordAD" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Сбросить пароль AD</h1>                
+            </div>
+            <div class="modal-body">                
+            </div>           
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="ResetPasswordGoogle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Сбросить пароль Google</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="SuspendGoogle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Заблокировать пользователя в Google</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+            </div>
+            @* <div class="modal-footer">
+            @* <button type="submit" class="btn btn-primary">Добавить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            @* <button type="button" class="btn btn-primary">Добавить</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="SuspendAD" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Заблокировать пользователя в Google</h1>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> *@
+            </div>
+            <div class="modal-body">
+            </div>
+            @* <div class="modal-footer">
+            @* <button type="submit" class="btn btn-primary">Добавить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            @* <button type="button" class="btn btn-primary">Добавить</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+@section scripts {    
+    <script>
+        $(document).ready(function () {
+            $('#button').click(function (event) {
+                event.preventDefault();  
+                var selected = [];   
+                $('.toggle:checked').each(function () {
+                    selected.push(parseInt($(this).attr("id")));  
+                });
+                var url = $(this).data('url');                
+                var queryString = "?Selecteditem=" + selected.join(",");
+                $.ajax({
+                    type: "GET",
+                    url: url + queryString
+                });
+            });
+        });
+
+    </script>    
+    <script>
+
+        $(document).ready(function () {
+            
+            checkCheckboxes();
+
+            $('.toggle').change(function () {
+                checkCheckboxes();
+            });
+
+            function checkCheckboxes() {
+                if ($('.toggle:checked').length > 0) {
+                    $('#button').prop('disabled', false);
+                } else {
+                    $('#button').prop('disabled', true);
+                }
+            }
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".use-script").on("show.bs.modal", function (e) {
+                var link = $(e.relatedTarget);
+                $(this).find(".modal-body").load(link.data("url"));
+            });
+        });
+     </script> 
+    <script>
+        $(document).ready(function () {
+            $('#PasswordModal').modal('show');
+
+            $('#copyPasswordBtn').click(function () {
+                var passwordText = document.getElementById("passwordText").innerText;
+                navigator.clipboard.writeText(passwordText);
+            });
+        });
+         </script> 
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function () {
+           
+            var buttons = document.querySelectorAll('[data-toggle="collapse"]');
+
+            
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    
+                    var target = document.querySelector(this.getAttribute('data-target'));
+
+                    
+                    if (target) {
+                        target.classList.toggle('show');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.division-item').click(function () {
+                $(this).siblings('.child-list').toggle();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.toggle-icon').click(function () {
+                var icon = $(this);
+                var childList = icon.closest('li').find('> ul.child-list');
+                if (childList.is(':visible')) {
+                    childList.slideUp();
+                } else {
+                    childList.slideDown();
+                }
+            });
+        });
+         </script>
+}
+
+

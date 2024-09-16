@@ -1,0 +1,41 @@
+﻿@model AD.Controllers.AccountController.AccountModel
+
+@{
+    ViewData["Title"] = "GoogleAddUser";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <form method="post" action="@Url.Action("GoogleAddUser", "Account")">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group">
+            <label asp-for="GoogleDomain.Name" class="control-label">Имя Домена</label>
+            <select asp-for="GoogleDomain.Name" class="form-control">
+                <option value="">Выберите домен</option>
+                @foreach (var domain in Model.GoogleDomains)
+                {
+                    <option value="@domain.Name">@domain.Name</option>
+                }
+            </select>
+            <span asp-validation-for="GoogleDomain.Name" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="UserAccountName.id" />
+        <p>Данное действие добавит пользователя в Google</p>       
+        <div class="form-group">
+            <input type="submit" value="Добавить" class="btn btn-primary" />
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+
+       
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,182 @@
+﻿@model AD.Controllers.ManagerController.ManagerModel
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+    .division-list {
+        padding-left: 0;
+    }
+
+        .division-list ul {
+            padding-left: 40px;
+        }
+
+        .division-list li {
+            list-style-type: none;
+            padding: 5px 0;
+        }
+
+    .division-item {
+        width: 50%;
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
+        padding: 5px; 
+        margin-bottom: 5px; 
+        cursor: pointer;
+        padding: 10px;
+    }
+
+        .division-item:hover {
+            background-color: #f0f0f0;
+        }
+
+    .btn {
+        margin-left: 10px;
+    }
+
+    .division-item {
+    }
+
+    .child-list {
+        margin-left: 20px; 
+    }
+
+    .action-link {
+        margin-left: 5px; 
+    }
+
+</style>
+
+<h3>Адрес</h3>
+<p>
+    <a asp-action="CreateLocation">Добавить</a>
+</p>
+<table class="table" 
+    <thead>
+        <tr>
+            <th>Адрес</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Locations)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="EditLocation" asp-route-id="@item.id">Изменить</a>
+                    <a asp-action="DeleteLocation" asp-route-id="@item.id">Удалить</a>
+                </td>
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+<h3>Подразделения</h3>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#MainDivision" data-url="@Url.Action("MainOrg")">
+    Добавить подразделение
+</button>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Подразделения</h3>            
+            <ul class="division-list">
+                @foreach (var division in Model.organizationalDivisions.Where(d => d.ParentId == null))
+                {
+                    @Html.Raw(RenderDivision(division, Model.organizationalDivisions))
+                }
+            </ul>
+            @functions {
+                string RenderDivision(OrganizationalDivisions division, IEnumerable<OrganizationalDivisions> allDivisions)
+                {
+
+                    var result = new System.Text.StringBuilder();
+                    
+                    var editUrl = Url.Action("Index", new { id = division.id });
+                    var deleteUrl = Url.Action("DeleteOrg", new { id = division.id });
+
+
+                    result.Append($"<li>");
+                    result.Append($"<div class='division-item'>");
+
+                    var children = allDivisions.Where(d => d.ParentId == division.id).ToList();
+                    if (children.Any())
+                    {
+                        result.Append($"<span class='toggle-icon'>+</span> ");
+                    }
+
+                    result.Append($"<strong>{division.Name}</strong> {division.Description}");
+
+                    result.Append($"<form action='{deleteUrl}' method='get' style='display:inline;'>");
+                    result.Append($"<input type='hidden' name='Id' value='{division.id}' />");
+                   
+                    result.Append($"<button type='button' class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#DelDivision' data-url='{deleteUrl}'>Удалить</button>");
+                    result.Append($"</form>");
+                    result.Append($"</div>");
+                    
+                    if (children.Any())
+                    {
+                        result.Append("<ul class='child-list' style='display:none;'>");
+                        foreach (var child in children)
+                        {
+                            result.Append(RenderDivision(child, allDivisions));
+                        }
+                        result.Append("</ul>");
+                    }
+
+                    result.Append("</li>");
+                    return result.ToString();
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade use-script" id="MainDivision" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить главные подразделения</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade use-script" id="DelDivision" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Удалить</h1>
+            </div>
+            <div class="modal-body">
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".use-script").on("show.bs.modal", function (e) {
+            var link = $(e.relatedTarget);
+            $(this).find(".modal-body").load(link.data("url"));
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.division-item').click(function () {
+            $(this).siblings('.child-list').toggle();
+        });
+    });
+</script>

@@ -1,0 +1,49 @@
+﻿@model AD.Controllers.AccountController.AccountModel
+
+@{
+    ViewData["Title"] = "Create";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+<form id="createForm" asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="UserAccountName.FirstName"></label>
+        <input asp-for="UserAccountName.FirstName" class="form-control" />
+        <span asp-validation-for="UserAccountName.FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UserAccountName.LastName"></label>
+        <input asp-for="UserAccountName.LastName" class="form-control" />
+        <span asp-validation-for="UserAccountName.LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UserAccountName.SurName"></label>
+        <input asp-for="UserAccountName.SurName" class="form-control" />
+        <span asp-validation-for="UserAccountName.SurName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="organizationalDivision.id" class="control-label">Подразделение</label>
+        <select id="organizationalDivisionSelect" asp-for="organizationalDivision.id" class="form-control">
+        <option value="">Выберите подразделение</option>
+            @foreach (var ou in Model.organizationalDivisions)
+            {
+                <option value="@ou.id">@ou.Name</option>
+            }
+        </select>
+        <span asp-validation-for="organizationalDivision.id" class="text-danger"></span>
+    </div>    
+    <p>
+    <div class="form-group">        
+        <input type="submit" value="Добавить" class="btn btn-primary" />
+        @* <input type="cancel" value="Закрыть" class="btn btn-primary"/> *@
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+    </div>
+</form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+}
+

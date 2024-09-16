@@ -1,0 +1,27 @@
+﻿@model AD.Models.GoogleGroups
+
+@{
+    ViewData["Title"] = "DeleteGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Удалить</h1>
+
+<div>
+    <h4>Google group удалить</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GroupName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GroupName)
+        </dd>       
+    </dl>
+
+    <form asp-action="DeleteGroup">
+        <input type="hidden" asp-for="id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

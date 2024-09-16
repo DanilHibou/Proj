@@ -1,0 +1,85 @@
+﻿@model AD.Controllers.ActiveDirectoryController.ActiveDirectoryModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>AD OUs</h3>
+<p>
+    <a asp-action="GetOUAD">Загрузить OUs</a>
+</p>
+<table class="table" id="">
+    <thead>
+        <tr>
+            <th>Имя OU</th>
+            <th>Путь OU</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ADOUList)
+        {
+            <tr>
+                <td>@item.OUName</td>
+                <td>@item.OUPath</td>
+                <td>
+                    <a asp-action="EditOU" asp-route-id="@item.id">Изменить</a>
+                    <a asp-action="DeleteOU" asp-route-id="@item.id">Удалить</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+<h3>AD группы</h3>
+<p>
+    <a asp-action="GetGroupsAD">Загрузить группы</a>
+</p>
+<table class="table" id="">
+    <thead>
+        <tr>
+            <th>Имя Группы</th>
+            <th>Путь Группы</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.aDGroupsList)
+        {
+            <tr>
+                <td>@item.GroupName</td>
+                <td>@item.GroupPath</td>
+                <td>
+                    <a asp-action="EditGroup" asp-route-id="@item.id">Изменить</a>
+                    <a asp-action="DeleteGroup" asp-route-id="@item.id">Удалить</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+<h3>Разрешенные пользователи</h3>
+<p>
+    <a asp-action="FindUser">Найти пользователя</a>
+</p>
+<table class="table" id="">
+    <thead>
+        <tr>
+            <th>UserName</th>
+            <th>Действие</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AllowedUsersList)
+        {
+            <tr>
+                <td>@item.UserName</td>                
+                <td>
+                    <a asp-action="DeleteUser" asp-route-id="@item.id">Удалить</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

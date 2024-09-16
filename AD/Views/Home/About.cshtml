@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+
+<h1>About</h1>
+
+<p>This is the About page.</p>
+<h1>About</h1>
+
+@if (ViewBag.Users != null)
+{
+    <h3>Google Users:</h3>
+    <ul>
+        @foreach (var user in ViewBag.Users)
+        {
+            <li>@user.PrimaryEmail - @user.Name.FullName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Токен доступа не найден в куках.</p>
+}

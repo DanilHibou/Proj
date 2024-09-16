@@ -1,0 +1,29 @@
+﻿@model List<AD.Models.ADOU>;
+@{
+    ViewData["Title"] = "GetAllUsers";
+}
+
+<div>
+    <h4>ADEntity List</h4>
+    <hr />
+    <form method="post" action="@Url.Action("GetAllUsers", "Data")">
+        <button type="submit">Загрузить всех пользователей</button>
+    </form>
+    <table class="table">
+        <tr>
+            <th>Почта</th>
+            <th>Организационное подразделение</th>
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => item.OUName)</td>
+                <td>@Html.DisplayFor(model => item.OUPath)</td>
+
+            </tr>
+        }
+    </table>
+</div>
+
+

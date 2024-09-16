@@ -1,0 +1,35 @@
+﻿@model AD.Models.UserAccountNames
+
+<form id="createForm" asp-action="Create" method="post">
+    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>         
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SurName"></label>
+        <input asp-for="SurName" class="form-control" />
+        <span asp-validation-for="SurName" class="text-danger"></span>
+    </div>   
+  
+    <button type="submit" class="btn btn-primary">Добавить</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

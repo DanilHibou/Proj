@@ -1,0 +1,40 @@
+﻿@model AD.Controllers.AccountController.AccountModel
+
+@{
+    ViewData["Title"] = "AddUserGroupAD";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <form method="post" action="@Url.Action("AddUserGroupAD", "Account")">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>        
+        <div class="form-group">
+            <label asp-for="ADGroup.GroupName" class="control-label">Выберите группу</label>
+            <select asp-for="ADGroup.id" class="form-control">
+                <option value="">Имя группы</option>
+                @foreach (var group in Model.aDGroups)
+                {
+                    <option value="@group.id">@group.GroupName</option>
+                }
+            </select>
+            <span asp-validation-for="ADGroup.GroupName" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="UserAccountName.id" />
+        <p>Данное действие добавит пользователя в группу AD</p>
+        <div class="form-group">
+            <input type="submit" value="Добавить" class="btn btn-primary" />
+            @* <input type="cancel" value="Закрыть" class="btn btn-primary"/> *@
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+
+       
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

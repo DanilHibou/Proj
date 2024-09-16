@@ -1,0 +1,94 @@
+﻿@model AD.Controllers.DataController.AccountIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    
+    .table {
+        width: 50%;
+        border-collapse: separate; 
+        border-spacing: 0; 
+        background-color: #f2f2f2; 
+        border-radius: 10px; 
+        overflow: hidden; 
+    }
+
+        
+        .table th {
+            background-color: #f2f2f2; 
+            padding: 8px; 
+            text-align: left; 
+        }
+
+        
+        .table td {
+            padding: 8px; 
+        }
+
+    #google-table {
+        width: 30%; 
+    }
+
+
+</style>
+<h3>Google Домены</h3>
+<p>
+    <a asp-action="CreateGoogleDomains">Добавить</a>
+</p>
+<table class="table" id="google-table">
+    <thead>
+        <tr>            
+            <th>Google Домены </th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.GoogleDomain)
+        {
+            <tr>                
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="EditGoogle" asp-route-id="@item.id">Изменить</a>
+                    <a asp-action="GoogleDelete" asp-route-id="@item.id">Удалить</a>
+                </td>
+                
+            </tr>
+
+        }
+    </tbody>
+</table>
+<h3>Active Directory Домены</h3>
+<p>
+    <a asp-action="TestDomainConnection">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Адрес AD</th>
+            <th>Название Домена AD</th>            
+            <th>LDAP</th> 
+            <th>Успех подключения</th>
+            <th>Действие</th>
+        </tr>      
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ADDomain)
+        {
+            <tr>
+                <td>@item.DomainControllerAddress</td>           
+                <td>@item.DomainName</td>            
+                <td>@item.LdapFormat</td>
+                <td>@item.IsActive</td>
+                <td>
+                    <a asp-action="EditAD" asp-route-id="@item.Id">Изменить</a>
+                    <a asp-action="DeleteAD" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

@@ -1,0 +1,43 @@
+﻿@model AD.Controllers.GoogleController.GoogleModel
+@{
+    ViewData["Title"] = "GetGoogleGroups";
+}
+
+<div>
+    <h4>Список Групп</h4>
+    <hr />
+  
+    <form method="post" action="@Url.Action("GetGoogleGroups", "Google")">
+        <button type="submit">Загрузить группы</button>
+       
+        <select asp-for="GoogleDomain.Name" class="form-control" name="domain">
+            <option value="">Выберите домен</option>
+            @foreach (var domain in Model.GoogleDomains)
+            {
+                <option value="@domain.Name">@domain.Name</option>
+            }
+        </select>
+    </form>
+    <form method="post" action="@Url.Action("SaveGroupsGoogle", "Google")">
+        <button type="submit">Save</button>
+        <table class="table">
+            <tr>
+                <th>Выбрать</th>
+                <th>Имя Группы</th>
+                <th>id Группы</th>
+            </tr>
+            @for (int i = 0; i < Model.googleGroupsList.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => m.googleGroupsList[i].isChecked)
+                        @Html.HiddenFor(m => m.googleGroupsList[i].GroupName)
+                        @Html.HiddenFor(m => m.googleGroupsList[i].Groupid)
+                    </td>
+                    <td>@Html.DisplayFor(m => m.googleGroupsList[i].GroupName)</td>
+                    <td>@Html.DisplayFor(m => m.googleGroupsList[i].Groupid)</td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>

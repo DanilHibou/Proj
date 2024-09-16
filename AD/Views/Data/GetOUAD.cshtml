@@ -1,0 +1,18 @@
+﻿@model List<string> // Указываем модель для представления
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List of Organizational Units</title>
+</head>
+<body>
+    <h1>List of Organizational Units</h1>
+    <ul>
+        @foreach (var ouName in Model)
+        {
+            <li>@ouName</li>
+        }
+    </ul>
+</body>
+</html>

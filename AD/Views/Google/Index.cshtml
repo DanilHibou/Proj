@@ -1,0 +1,58 @@
+﻿@model AD.Controllers.GoogleController.GoogleModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>Google группы и OU</h3>
+<p>
+    <a asp-action="GetGoogleOU">Загрузить OUs</a>
+</p>
+<table class="table" id="">
+    <thead>
+        <tr>
+            <th>Имя OU</th>
+            <th>Путь OU</th>
+            <th>id OU</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.googleOUList)
+        {
+            <tr>
+                <td>@item.OUName</td>
+                <td>@item.OUPath</td>
+                <td>@item.OUid</td>
+                <td>                    
+                    <a asp-action="DeleteOU" asp-route-id="@item.id">Удалить</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+<p>
+    <a asp-action="GetGoogleGroups">Загрузить группы</a>
+</p>
+<table class="table" id="">
+    <thead>
+        <tr>
+            <th>Имя Группы</th>
+            <th>id Группы</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.googleGroupsList)
+        {
+            <tr>
+                <td>@item.GroupName</td>
+                <td>@item.Groupid</td>
+                <td>                    
+                    <a asp-action="DeleteGroup" asp-route-id="@item.id">Удалить</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
