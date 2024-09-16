@@ -30,9 +30,4 @@
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.4" />   
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Migrations\IdentityMigrations\" />
-  </ItemGroup>
-
 </Project>
